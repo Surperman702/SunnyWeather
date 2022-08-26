@@ -4,7 +4,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 /**
- * 3.定义好了PlaceService接口，为了能够使用它，我们还得创建一个Retrofit构建器才行
+ * 1.3.定义好了PlaceService接口，为了能够使用它，我们还得创建一个Retrofit构建器才行
  */
 object ServiceCreator {
 

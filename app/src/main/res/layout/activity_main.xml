@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--9.Fragment是不能直接显示在界面上的，因此我们还需要把它添加到Activity里才行-->
+    <!--1.10.Fragment是不能直接显示在界面上的，因此我们还需要把它添加到Activity里才行-->
     <fragment
         android:id="@+id/placeFragment"
         android:name="com.sunnyweather.android.ui.place.PlaceFragment"

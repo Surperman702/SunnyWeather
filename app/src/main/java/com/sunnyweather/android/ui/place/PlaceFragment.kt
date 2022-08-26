@@ -1,6 +1,7 @@
 package com.sunnyweather.android.ui.place
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,16 +13,17 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sunnyweather.android.R
+import com.sunnyweather.android.ui.weather.WeatherActivity
 import kotlinx.android.synthetic.main.fragment_place.*
 
 /**
- * 8.对Fragment进行实现.并让它继承自AndroidX库中的Fragment
+ * 1.9.对Fragment进行实现.并让它继承自AndroidX库中的Fragment
  */
 
 class PlaceFragment : Fragment() {
 
     /**
-     * 8.1首先，这里使用了lazy函数这种懒加载技术来获取PlaceViewModel的实例，
+     * 1.9.1首先，这里使用了lazy函数这种懒加载技术来获取PlaceViewModel的实例，
      * 这是一种非常棒的写法，允许我们在整个类中随时使用viewModel这个变量，而完全不用关心它何时初始化、是否为空等前提条件
      */
     val viewModel by lazy { ViewModelProvider(this).get(PlaceViewModel::class.java) }
@@ -42,6 +44,25 @@ class PlaceFragment : Fragment() {
     @SuppressLint("FragmentLiveDataObserve")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        /**
+         * 4.5.完成了存储功能之后，我们还要对存储的状态进行判断和读取才行
+         *
+         * 如果当前已有存储的城市数据，那么就获取已存储的数据并解析成Place对象，
+         * 然后使用它的经纬度坐标和城市名直接跳转并传递给WeatherActivity，这样用户就不需要每次都重新搜索并选择城市了。
+         */
+        if (viewModel.isPlaceSaved()) {
+            val place = viewModel.getSavedPlace()
+            val intent = Intent(context, WeatherActivity::class.java).apply {
+                putExtra("location_lng", place.location.lng)
+                putExtra("location_lat", place.location.lat)
+                putExtra("place_name", place.name)
+            }
+            startActivity(intent)
+            activity?.finish()
+            return
+        }
+
         // 这个方法中先是给RecyclerView设置了LayoutManager和适配器，并使用PlaceViewModel中的placeList集合作为数据源
         val layoutManager = LinearLayoutManager(activity)
         recyclerView.layoutManager = layoutManager

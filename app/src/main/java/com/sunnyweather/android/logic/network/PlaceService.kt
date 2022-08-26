@@ -7,7 +7,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 /**
- * 2.开始编写网络层相关的代码了。首先定义一个用于访问彩云天气城市搜索API的Retrofit接口
+ * 1.2.开始编写网络层相关的代码了。首先定义一个用于访问彩云天气城市搜索API的Retrofit接口
  */
 
 interface PlaceService {

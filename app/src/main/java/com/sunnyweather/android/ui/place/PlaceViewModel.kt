@@ -7,7 +7,7 @@ import com.sunnyweather.android.logic.Repository
 import com.sunnyweather.android.logic.model.Place
 
 /**
- * 5.定义ViewModel层
+ * 1.6.定义ViewModel层
  */
 
 class PlaceViewModel : ViewModel() {
@@ -27,7 +27,7 @@ class PlaceViewModel : ViewModel() {
     val placeList = ArrayList<Place>()
 
     /**
-     * 5.2转换函数
+     * 1.6.2转换函数
      * 并使用Transformations的switchMap()方法来观察这个对象，否则仓库层返回的LiveData对象将无法进行观察
      */
     val placeLiveData = Transformations.switchMap(searchLiveData) { query ->
@@ -35,11 +35,22 @@ class PlaceViewModel : ViewModel() {
     }
 
     /**
-     * 5.1首先PlaceViewModel中也定义了一个searchPlaces()方法，
+     * 1.6.1首先PlaceViewModel中也定义了一个searchPlaces()方法，
      * 但是这里并没有直接调用仓库层中的searchPlaces()方法，而是将传入的搜索参数赋值给了一个searchLiveData对象
      */
     fun searchPlaces(query: String) {
         searchLiveData.value = query
     }
+
+    /**
+     * 4.3.PlaceDao这几个接口的业务逻辑是和PlaceViewModel相关的，因此我们还得在PlaceViewModel中再进行一层封装才行
+     *
+     * 由于仓库层中这几个接口的内部没有开启线程，因此也不必借助LiveData对象来观察数据变化，直接调用仓库层中相应的接口并返回即可
+     */
+    fun savePlace(place: Place) = Repository.savePlace(place)
+
+    fun getSavedPlace() = Repository.getSavedPlace()
+
+    fun isPlaceSaved() = Repository.isPlaceSaved()
 
 }
