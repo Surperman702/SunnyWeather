@@ -1,13 +1,17 @@
 package com.sunnyweather.android.ui.weather
 
+import android.content.Context
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.sunnyweather.android.R
@@ -65,9 +69,57 @@ class WeatherActivity : AppCompatActivity() {
                 Toast.makeText(this, "无法成功获取天气信息", Toast.LENGTH_SHORT).show()
                 result.exceptionOrNull()?.printStackTrace()
             }
+            /**
+             * 5.手动下拉刷新
+             * 5.1.加入刷新天气的处理逻辑
+             */
+            swipeRefresh.isRefreshing = false
         })
-        // 最后，调用了WeatherViewModel的refreshWeather()方法来执行一次刷新天气的请求。
+        swipeRefresh.setColorSchemeResources(R.color.design_default_color_primary)
+        refreshWeather()
+        /**
+         * 5.3.调用setOnRefreshListener()方法给SwipeRefreshLayout设置一个下拉刷新的监听器，
+         * 当触发了下拉刷新操作的时候，就在监听器的回调中调用refreshWeather()方法来刷新天气信息。
+         */
+        swipeRefresh.setOnRefreshListener {
+            refreshWeather()
+        }
+
+        /**
+         * 6.切换城市
+         * 6.1.加入滑动菜单的逻辑
+         */
+        // 第一，在切换城市按钮的点击事件中调用DrawerLayout的openDrawer()方法来打开滑动菜单
+        navBtn.setOnClickListener {
+            drawerLayout.openDrawer(GravityCompat.START)
+        }
+        // 监听DrawerLayout的状态，当滑动菜单被隐藏的时候，同时也要隐藏输入法
+        drawerLayout.addDrawerListener(object : DrawerLayout.DrawerListener {
+            override fun onDrawerStateChanged(newState: Int) {}
+
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
+
+            override fun onDrawerOpened(drawerView: View) {}
+
+            override fun onDrawerClosed(drawerView: View) {
+                val manager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                manager.hideSoftInputFromWindow(
+                    drawerView.windowToken,
+                    InputMethodManager.HIDE_NOT_ALWAYS
+                )
+            }
+
+        })
+    }
+
+    /**
+     * 5.2.在这里调用WeatherViewModel的refreshWeather()方法，
+     * 并将SwipeRefreshLayout的isRefreshing属性设置成true，从而让下拉刷新进度条显示出来
+     */
+    fun refreshWeather() {
+        // 调用了WeatherViewModel的refreshWeather()方法来执行一次刷新天气的请求。
         viewModel.refreshWeather(viewModel.locationLng, viewModel.locationLat)
+        swipeRefresh.isRefreshing = true
     }
 
     /**

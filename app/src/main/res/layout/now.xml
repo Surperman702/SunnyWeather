@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--新建一个now.xml作为当前天气信息的布局-->
+<?xml version="1.0" encoding="utf-8"?><!--新建一个now.xml作为当前天气信息的布局-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/nowLayout"
     android:layout_width="match_parent"
@@ -14,6 +13,15 @@
         android:layout_height="70dp"
         android:fitsSystemWindows="true">
 
+        <!--添加了一个Button作为切换城市的按钮，并且让它居左显示-->
+        <Button
+            android:id="@+id/navBtn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="15dp"
+            android:background="@drawable/ic_home" />
+
         <TextView
             android:id="@+id/placeName"
             android:layout_width="wrap_content"
@@ -25,7 +33,8 @@
             android:singleLine="true"
             android:textColor="#fff"
             android:textSize="22sp" />
-    </FrameLayout><!--当前天气信息的布局，里面放置了几个TextView，分
+    </FrameLayout>
+    <!--当前天气信息的布局，里面放置了几个TextView，分
     别用于显示当前气温、当前天气情况以及当前空气质量。-->
     <LinearLayout
         android:id="@+id/bodyLayout"
